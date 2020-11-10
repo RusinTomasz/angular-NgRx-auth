@@ -1,17 +1,20 @@
-import { State } from './../state/app.state';
-import { getUserToken } from './state/index';
+import { User } from './user';
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
   HttpHeaders,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { catchError, tap } from 'rxjs/operators';
-import { throwError, BehaviorSubject, Subject, of } from 'rxjs';
-import { User } from './user';
+
 import { Router } from '@angular/router';
 
+/* RxJs */
+import { catchError, tap } from 'rxjs/operators';
+import { throwError, BehaviorSubject, Subject, of } from 'rxjs';
+/* NgRx */
 import { Store } from '@ngrx/store';
+import { State } from './../state/app.state';
+
 export interface LoginInterface {
   firstName: string;
   lastName: string;
@@ -23,7 +26,7 @@ export interface LoginInterface {
 
 export interface RegisterInterface {
   message: string;
-  userId: string;
+  createdUserName: string;
 }
 
 export interface ForgotPasswordInterface {
@@ -78,18 +81,22 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
-  signUp(formValues: {
-    name: string;
-    email: string;
-    password: string;
-    phoneNumber: string;
-  }) {
+  signUp(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+    phoneNumber: string
+  ) {
     const userToRegister = {
-      name: formValues.name,
-      email: formValues.email,
-      password: formValues.password,
-      phoneNumber: formValues.phoneNumber,
+      firstName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
     };
+
+    console.log(userToRegister);
 
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/hal+json');

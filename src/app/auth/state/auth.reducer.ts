@@ -1,5 +1,5 @@
 import { autoLogin } from './actions/auth-page.actions';
-import { User } from './../user';
+import { User, RegisteredUser } from './../user';
 /* NgRx */
 import { createReducer, on } from '@ngrx/store';
 import { AuthApiActions, AuthPageActions } from './actions';
@@ -7,6 +7,7 @@ import { AuthApiActions, AuthPageActions } from './actions';
 // State for this feature (Auth)
 export interface AuthState {
   currentUser: User;
+  registeredUserEmail: string;
   error: string | null;
   isLoading: boolean;
 }
@@ -20,6 +21,7 @@ const initialState: AuthState = {
     userId: null,
     role: null,
   },
+  registeredUserEmail: null,
   error: '',
   isLoading: false,
 };
@@ -89,6 +91,35 @@ export const authReducer = createReducer<AuthState>(
   ),
   on(
     AuthApiActions.loginUserFailure,
+    (state, action): AuthState => {
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+      };
+    }
+  ),
+  on(
+    AuthPageActions.registerUser,
+    (state): AuthState => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+  ),
+  on(
+    AuthApiActions.registerUserSuccess,
+    (state, action): AuthState => {
+      return {
+        ...state,
+        registeredUserEmail: action.registeredUserEmail,
+        isLoading: false,
+      };
+    }
+  ),
+  on(
+    AuthApiActions.registerUserFailure,
     (state, action): AuthState => {
       return {
         ...state,

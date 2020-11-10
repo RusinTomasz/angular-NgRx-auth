@@ -6,3 +6,9 @@ export interface User {
   userId: string | null;
   role: string | null;
 }
+
+export interface RegisteredUser {
+  message: string | null;
+  userId: string | null;
+  userEmail: string | null;
+}
