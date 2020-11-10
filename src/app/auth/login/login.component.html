@@ -1,0 +1,84 @@
+<div id="login" fxLayout="column">
+  <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+    <div id="login-form">
+      <div class="logo">
+        <img src="assets/images/logos/booking-black.svg" />
+      </div>
+
+      <div class="title">ZALOGUJ SIĘ DO KONTA</div>
+
+      <form name="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" />
+          <mat-icon matSuffix class="secondary-text">mail_outline</mat-icon>
+          <mat-error *ngIf="loginForm.get('email').hasError('required')">
+            Email jest wymagany
+          </mat-error>
+          <mat-error
+            *ngIf="
+              !loginForm.get('email').hasError('required') &&
+              loginForm.get('email').hasError('email')
+            "
+          >
+            Podaj poprawny email
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Hasło</mat-label>
+          <input matInput type="password" formControlName="password" />
+          <mat-icon matSuffix class="secondary-text">lock_open</mat-icon>
+          <mat-error> Hasło jest wymagane </mat-error>
+        </mat-form-field>
+
+        <div
+          class="remember-forgot-password"
+          fxLayout="row"
+          fxLayout.xs="column"
+          fxLayoutAlign="center center"
+        >
+          <a
+            mat-button
+            color="primary"
+            class="forgot-password"
+            [routerLink]="'/forgot-password'"
+          >
+            Zapomniałeś hasła?
+          </a>
+        </div>
+
+        <p *ngIf="errorMessage$ | async as errorMessage" class="error">
+          {{ errorMessage }}
+        </p>
+
+        <div class="spinner" *ngIf="isLoading$ | async">
+          <mat-spinner color="accent"></mat-spinner>
+        </div>
+        <div class="button-wrapper">
+          <button
+            *ngIf="!(isLoading$ | async)"
+            mat-raised-button
+            color="accent"
+            class="submit-button"
+            aria-label="LOG IN"
+            [disabled]="loginForm.invalid"
+          >
+            ZALOGUJ
+          </button>
+        </div>
+      </form>
+
+      <div class="separator">
+        <span class="text">LUB</span>
+      </div>
+
+      <div class="register" fxLayout="column" fxLayoutAlign="center center">
+        <span class="text">Nie posiadasz jeszcze konta?</span>
+        <a mat-button color="primary" class="link" [routerLink]="'/register'"
+          >Zarejestruj się</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
