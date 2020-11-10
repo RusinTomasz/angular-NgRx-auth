@@ -93,13 +93,14 @@
           <a href="#">regulamin</a>
         </div>
 
-        <p *ngIf="error" class="error">
-          {{ error }}
+        <p *ngIf="errorMessage$ | async as errorMessage" class="error">
+          {{ errorMessage }}
         </p>
-        <div class="spinner" *ngIf="isLoading">
+        <div class="spinner" *ngIf="isLoading$ | async">
           <mat-spinner color="accent"></mat-spinner>
         </div>
         <button
+          *ngIf="!(isLoading$ | async)"
           mat-raised-button
           color="accent"
           class="submit-button"
