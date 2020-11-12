@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 /* Components */
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { MailConfirmComponent } from './mail-confirm/mail-confirm.component';
 
 /* NgRx */
 import { EffectsModule } from '@ngrx/effects';
@@ -29,10 +30,18 @@ const routes = [
     path: 'register',
     component: RegisterComponent,
   },
+  {
+    path: 'mail-confirm',
+    component: MailConfirmComponent,
+  },
+  // {
+  //     path: "mail-verify",
+  //     component: MailVerifyComponent,
+  // },
 ];
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent],
+  declarations: [LoginComponent, RegisterComponent, MailConfirmComponent],
   imports: [
     RouterModule.forChild(routes),
     //Shared

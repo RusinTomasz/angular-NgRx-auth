@@ -24,4 +24,7 @@ export const getUserToken = createSelector(
   (state) => state.currentUser.token
 );
 
-
+export const getRegisteredUserEmail = createSelector(
+  getAuthFeatureState,
+  (state) => state.registeredUserEmail
+);

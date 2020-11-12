@@ -1,0 +1,30 @@
+<div id="mail-confirm" fxLayout="column">
+  <div
+    id="mail-confirm-form-wrapper"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+  >
+    <div id="mail-confirm-form">
+      <div class="logo">
+        <mat-icon class="mat-accent s-96">email</mat-icon>
+      </div>
+
+      <div class="title">Potwierdź swój adres email!</div>
+
+      <div class="subtitle">
+        <p>
+          Email potwierdzający został wysłany na adres
+          <b>{{ registeredUserEmail$ | async }}</b>
+        </p>
+        <p>
+          Sprawdź swoją skrzynkę pocztową i kliknij w link "Potwierdź mój
+          email", aby potwierdzić swój email.
+        </p>
+      </div>
+
+      <div class="message">
+        <a class="link" [routerLink]="'/login'">Powrót do strony logowania</a>
+      </div>
+    </div>
+  </div>
+</div>
