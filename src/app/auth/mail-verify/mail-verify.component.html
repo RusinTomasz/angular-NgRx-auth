@@ -1,0 +1,32 @@
+<div id="mail-verify" fxLayout="column">
+  <div
+    id="mail-verify-form-wrapper"
+    fxLayout="column"
+    fxLayoutAlign="center center"
+  >
+    <div id="mail-verify-form">
+      <div class="logo">
+        <mat-icon class="mat-accent s-96">email</mat-icon>
+      </div>
+      <div *ngIf="!(errorMessage$ | async)" class="mail-verify-content-wrapper">
+        <div class="title">Gratulujemy Twoje konto zostało aktywowane!</div>
+
+        <div class="subtitle">
+          <p>Możesz się zalogować.</p>
+        </div>
+
+        <div class="message">
+          <a class="link" [routerLink]="'/login'">Strona logowania</a>
+        </div>
+      </div>
+      <div
+        *ngIf="errorMessage$ | async as errorMessage"
+        class="mail-verify-content-wrapper-error"
+      >
+        <div class="title">
+          {{ errorMessage }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,3 +1,4 @@
+import { map, switchMap, tap } from 'rxjs/operators';
 import { User } from './user';
 import { Injectable } from '@angular/core';
 import {
@@ -6,11 +7,11 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 /* RxJs */
 import { catchError, tap } from 'rxjs/operators';
-import { throwError, BehaviorSubject, Subject, of } from 'rxjs';
+import { throwError, BehaviorSubject, concat, Subject, of } from 'rxjs';
 /* NgRx */
 import { Store } from '@ngrx/store';
 import { State } from './../state/app.state';
@@ -42,17 +43,23 @@ export class AuthService {
   userEmailAddress: string = '';
   user = new BehaviorSubject<User>(null);
   isAdmin = false;
-
+  token: string = '';
   constructor(
     private http: HttpClient,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private store: Store<State>
   ) {}
 
-  verifyAccount(token: string) {
-    return this.http
-      .get(`http://localhost:8080/auth/verify-email?token=${token}`)
-      .pipe(catchError(this.handleError));
+  verifyAccount() {
+    return this.activatedRoute.queryParams.pipe(
+      map((params) => (this.token = params['token'])),
+      switchMap((token) =>
+        this.http
+          .get(`http://localhost:8080/auth/verify-email?token=${token}`)
+          .pipe(catchError(this.handleError))
+      )
+    );
   }
 
   forgotPassword(email: ForgotPasswordInterface) {
@@ -95,8 +102,6 @@ export class AuthService {
       password,
       phoneNumber,
     };
-
-    console.log(userToRegister);
 
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/hal+json');

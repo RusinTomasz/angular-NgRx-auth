@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { AuthService, RegisterInterface } from './../auth.service';
 
 /* RxJs */
-import { mergeMap, map, catchError, concatMap, tap } from 'rxjs/operators';
+import { map, catchError, concatMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 /* NgRx */
@@ -56,6 +56,20 @@ export class AuthEffects {
               of(AuthApiActions.registerUserFailure({ error }))
             )
           )
+      )
+    );
+  });
+
+  verifyAccount$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthPageActions.verifyAccount),
+      concatMap(() =>
+        this.authService.verifyAccount().pipe(
+          map(() => AuthApiActions.verifyAccountSuccess()),
+          catchError((error) =>
+            of(AuthApiActions.verifyAccountFailure({ error }))
+          )
+        )
       )
     );
   });

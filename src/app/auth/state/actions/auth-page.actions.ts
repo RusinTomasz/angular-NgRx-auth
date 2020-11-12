@@ -28,3 +28,7 @@ export const registerUser = createAction(
     phoneNumber: string;
   }>()
 );
+
+/* Verify Account */
+
+export const verifyAccount = createAction('[Auth Page] Verify Account');

@@ -127,5 +127,34 @@ export const authReducer = createReducer<AuthState>(
         isLoading: false,
       };
     }
+  ),
+  on(
+    AuthPageActions.verifyAccount,
+    (state): AuthState => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+  ),
+  on(
+    AuthApiActions.verifyAccountSuccess,
+    (state): AuthState => {
+      return {
+        ...state,
+        error: '',
+        isLoading: false,
+      };
+    }
+  ),
+  on(
+    AuthApiActions.verifyAccountFailure,
+    (state, action): AuthState => {
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+      };
+    }
   )
 );
