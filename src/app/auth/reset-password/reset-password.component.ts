@@ -1,12 +1,8 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+/* Services */
+import { FormValidatorService } from './../../helpers/form-validator.service';
 
 /* RxJS */
 import { Subject } from 'rxjs';
@@ -37,14 +33,24 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   isLoading$ = this.store.select(getLoadingStatus);
   passwordHasBeenChanged$ = this.store.select(getPasswordHasBeenChangedFlag);
 
-  constructor(private formBuilder: FormBuilder, private store: Store<State>) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private formValidatorService: FormValidatorService,
+    private store: Store<State>
+  ) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
     this.resetPasswordForm = this.formBuilder.group({
       password: ['', [Validators.required, Validators.minLength(6)]],
-      passwordConfirm: ['', [Validators.required, confirmPasswordValidator]],
+      passwordConfirm: [
+        '',
+        [
+          Validators.required,
+          this.formValidatorService.confirmPasswordValidator,
+        ],
+      ],
     });
 
     this.resetPasswordForm
@@ -72,28 +78,3 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 }
-
-export const confirmPasswordValidator: ValidatorFn = (
-  control: AbstractControl
-): ValidationErrors | null => {
-  if (!control.parent || !control) {
-    return null;
-  }
-
-  const password = control.parent.get('password');
-  const passwordConfirm = control.parent.get('passwordConfirm');
-
-  if (!password || !passwordConfirm) {
-    return null;
-  }
-
-  if (passwordConfirm.value === '') {
-    return null;
-  }
-
-  if (password.value === passwordConfirm.value) {
-    return null;
-  }
-
-  return { passwordsNotMatching: true };
-};

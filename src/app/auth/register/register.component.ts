@@ -1,19 +1,17 @@
-import { getLoadingStatus, getRegisterUserError } from './../state/index';
-import { State } from './../../state/app.state';
-import { Observable } from 'rxjs';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+/* Services */
+import { FormValidatorService } from './../../helpers/form-validator.service';
+
+/* RxJS */
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+/* NgRx */
 import { Store } from '@ngrx/store';
+import { State } from './../../state/app.state';
+import { getLoadingStatus, getRegisterUserError } from './../state/index';
 import { AuthPageActions } from '../state/actions';
 
 @Component({
@@ -29,7 +27,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private formBuilder: FormBuilder, private store: Store<State>) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private formValidatorService: FormValidatorService,
+    private store: Store<State>
+  ) {
     this._unsubscribeAll = new Subject();
   }
 
@@ -40,11 +42,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      passwordConfirm: ['', [Validators.required, confirmPasswordValidator]],
+      passwordConfirm: [
+        '',
+        [
+          Validators.required,
+          this.formValidatorService.confirmPasswordValidator,
+        ],
+      ],
     });
 
-    // Update the validity of the 'passwordConfirm' field
-    // when the 'password' field changes
     this.registerForm
       .get('password')
       .valueChanges.pipe(takeUntil(this._unsubscribeAll))
@@ -54,7 +60,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from all subscriptions
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
@@ -74,28 +79,3 @@ export class RegisterComponent implements OnInit, OnDestroy {
     );
   }
 }
-
-export const confirmPasswordValidator: ValidatorFn = (
-  control: AbstractControl
-): ValidationErrors | null => {
-  if (!control.parent || !control) {
-    return null;
-  }
-
-  const password = control.parent.get('password');
-  const passwordConfirm = control.parent.get('passwordConfirm');
-
-  if (!password || !passwordConfirm) {
-    return null;
-  }
-
-  if (passwordConfirm.value === '') {
-    return null;
-  }
-
-  if (password.value === passwordConfirm.value) {
-    return null;
-  }
-
-  return { passwordsNotMatching: true };
-};
