@@ -28,3 +28,8 @@ export const getRegisteredUserEmail = createSelector(
   getAuthFeatureState,
   (state) => state.registeredUserEmail
 );
+
+export const getEmailToSendResetPasswordLink = createSelector(
+  getAuthFeatureState,
+  (state) => state.emailToSendResetPasswordLink
+);

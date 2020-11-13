@@ -1,4 +1,3 @@
-import { map, switchMap, tap } from 'rxjs/operators';
 import { User } from './user';
 import { Injectable } from '@angular/core';
 import {
@@ -10,7 +9,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 
 /* RxJs */
-import { catchError, tap } from 'rxjs/operators';
+import { map, switchMap, tap, catchError } from 'rxjs/operators';
 import { throwError, BehaviorSubject, concat, Subject, of } from 'rxjs';
 /* NgRx */
 import { Store } from '@ngrx/store';
@@ -62,7 +61,7 @@ export class AuthService {
     );
   }
 
-  forgotPassword(email: ForgotPasswordInterface) {
+  sendEmailToResetPassword(email: ForgotPasswordInterface) {
     let headers = new HttpHeaders();
     headers.append('Content-Type', 'application/hal+json');
     headers.append('Accept', 'application/json');
@@ -166,7 +165,7 @@ export class AuthService {
   }
 
   private handleError(errorRes: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred!';
+    let errorMessage = 'Wystąpił błąd, proszę spróbować ponownie.';
     if (!errorRes.error.error.message) {
       return throwError(errorMessage);
     }

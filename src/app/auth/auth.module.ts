@@ -15,6 +15,8 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { MailConfirmComponent } from './mail-confirm/mail-confirm.component';
 import { MailVerifyComponent } from './mail-verify/mail-verify.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 /* NgRx */
 import { EffectsModule } from '@ngrx/effects';
@@ -39,6 +41,14 @@ const routes = [
     path: 'mail-verify',
     component: MailVerifyComponent,
   },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+  },
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+  },
 ];
 
 @NgModule({
@@ -47,6 +57,8 @@ const routes = [
     RegisterComponent,
     MailConfirmComponent,
     MailVerifyComponent,
+    ResetPasswordComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

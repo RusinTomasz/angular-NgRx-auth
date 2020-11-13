@@ -7,7 +7,8 @@ import { AuthApiActions, AuthPageActions } from './actions';
 // State for this feature (Auth)
 export interface AuthState {
   currentUser: User;
-  registeredUserEmail: string;
+  registeredUserEmail: string | null;
+  emailToSendResetPasswordLink: string | null;
   error: string | null;
   isLoading: boolean;
 }
@@ -22,6 +23,7 @@ const initialState: AuthState = {
     role: null,
   },
   registeredUserEmail: null,
+  emailToSendResetPasswordLink: null,
   error: '',
   isLoading: false,
 };
@@ -113,6 +115,7 @@ export const authReducer = createReducer<AuthState>(
     (state, action): AuthState => {
       return {
         ...state,
+        error: '',
         registeredUserEmail: action.registeredUserEmail,
         isLoading: false,
       };
@@ -149,6 +152,36 @@ export const authReducer = createReducer<AuthState>(
   ),
   on(
     AuthApiActions.verifyAccountFailure,
+    (state, action): AuthState => {
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+      };
+    }
+  ),
+  on(
+    AuthPageActions.sendEmailToResetPassword,
+    (state): AuthState => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+  ),
+  on(
+    AuthApiActions.sendEmailToResetPasswordSuccess,
+    (state, action): AuthState => {
+      return {
+        ...state,
+        error: '',
+        emailToSendResetPasswordLink: action.email,
+        isLoading: false,
+      };
+    }
+  ),
+  on(
+    AuthApiActions.sendEmailToResetPasswordFailure,
     (state, action): AuthState => {
       return {
         ...state,

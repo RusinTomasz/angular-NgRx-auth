@@ -36,3 +36,15 @@ export const verifyAccountFailure = createAction(
   '[Auth API] Verify Account Fail',
   props<{ error: string }>()
 );
+
+/* Forgot Password */
+
+export const sendEmailToResetPasswordSuccess = createAction(
+  '[Auth API] Send Email To Reset Password Success',
+  props<{ email: string }>()
+);
+
+export const sendEmailToResetPasswordFailure = createAction(
+  '[Auth API] Send Email To Reset Password Failure',
+  props<{ error: string }>()
+);

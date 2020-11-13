@@ -32,3 +32,10 @@ export const registerUser = createAction(
 /* Verify Account */
 
 export const verifyAccount = createAction('[Auth Page] Verify Account');
+
+/* Forgot Password */
+
+export const sendEmailToResetPassword = createAction(
+  '[Auth Page] Send Email To Reset Password',
+  props<{ email: string }>()
+);

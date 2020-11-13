@@ -73,4 +73,22 @@ export class AuthEffects {
       )
     );
   });
+
+  sendEmailToResetPassword$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthPageActions.sendEmailToResetPassword),
+      concatMap((action) =>
+        this.authService.sendEmailToResetPassword({ email: action.email }).pipe(
+          map(() =>
+            AuthApiActions.sendEmailToResetPasswordSuccess({
+              email: action.email,
+            })
+          ),
+          catchError((error) =>
+            of(AuthApiActions.sendEmailToResetPasswordFailure({ error }))
+          )
+        )
+      )
+    );
+  });
 }
