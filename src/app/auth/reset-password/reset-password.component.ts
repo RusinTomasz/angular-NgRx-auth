@@ -16,9 +16,9 @@ import { takeUntil } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { State } from './../../state/app.state';
 import {
-  getError,
   getLoadingStatus,
   getPasswordHasBeenChangedFlag,
+  getResetPasswordError,
 } from './../state/index';
 import { AuthPageActions } from '../state/actions';
 
@@ -33,7 +33,7 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
 
   resetPasswordForm: FormGroup;
 
-  errorMessage$ = this.store.select(getError);
+  errorMessage$ = this.store.select(getResetPasswordError);
   isLoading$ = this.store.select(getLoadingStatus);
   passwordHasBeenChanged$ = this.store.select(getPasswordHasBeenChangedFlag);
 

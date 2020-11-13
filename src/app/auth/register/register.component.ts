@@ -1,4 +1,4 @@
-import { getError, getLoadingStatus } from './../state/index';
+import { getLoadingStatus, getRegisterUserError } from './../state/index';
 import { State } from './../../state/app.state';
 import { Observable } from 'rxjs';
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
@@ -35,7 +35,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.errorMessage$ = this.store.select(getError);
+    this.errorMessage$ = this.store.select(getRegisterUserError);
 
     this.isLoading$ = this.store.select(getLoadingStatus);
 

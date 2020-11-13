@@ -3,6 +3,7 @@ import { User, RegisteredUser } from './../user';
 /* NgRx */
 import { createReducer, on } from '@ngrx/store';
 import { AuthApiActions, AuthPageActions } from './actions';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 // State for this feature (Auth)
 export interface AuthState {
@@ -10,9 +11,18 @@ export interface AuthState {
   registeredUserEmail: string | null;
   emailToSendResetPasswordLink: string | null;
   userPasswordHasBeenChanged: boolean;
-  error: string | null;
+  errors?: {
+    sendEmailToResetPasswordError?: string | null;
+    resetPasswordError?: string | null;
+    loginError?: string | null;
+    registerUserError?: string | null;
+    mailVerifyError?: string | null;
+  };
+  // error: string | null;
   isLoading: boolean;
 }
+
+//sendEmailToResetPasswordError / loginError / registerUserError / resetPasswordError / mailVerifyError /
 
 const initialState: AuthState = {
   currentUser: {
@@ -23,10 +33,16 @@ const initialState: AuthState = {
     userId: null,
     role: null,
   },
+  errors: {
+    sendEmailToResetPasswordError: '',
+    resetPasswordError: '',
+    loginError: '',
+    registerUserError: '',
+    mailVerifyError: '',
+  },
   registeredUserEmail: null,
   emailToSendResetPasswordLink: null,
   userPasswordHasBeenChanged: false,
-  error: '',
   isLoading: false,
 };
 
@@ -70,7 +86,7 @@ export const authReducer = createReducer<AuthState>(
           userId: null,
           role: null,
         },
-        error: '',
+        errors: { ...state.errors, loginError: '' },
         isLoading: false,
       };
     }
@@ -88,7 +104,7 @@ export const authReducer = createReducer<AuthState>(
           userId: action.user.userId,
           role: action.user.role,
         },
-        error: '',
+        errors: { ...state.errors, loginError: '' },
         isLoading: false,
       };
     }
@@ -98,7 +114,7 @@ export const authReducer = createReducer<AuthState>(
     (state, action): AuthState => {
       return {
         ...state,
-        error: action.error,
+        errors: { ...state.errors, loginError: action.error },
         isLoading: false,
       };
     }
@@ -117,7 +133,7 @@ export const authReducer = createReducer<AuthState>(
     (state, action): AuthState => {
       return {
         ...state,
-        error: '',
+        errors: { ...state.errors, registerUserError: '' },
         registeredUserEmail: action.registeredUserEmail,
         isLoading: false,
       };
@@ -128,7 +144,7 @@ export const authReducer = createReducer<AuthState>(
     (state, action): AuthState => {
       return {
         ...state,
-        error: action.error,
+        errors: { ...state.errors, registerUserError: action.error },
         isLoading: false,
       };
     }
@@ -147,7 +163,7 @@ export const authReducer = createReducer<AuthState>(
     (state): AuthState => {
       return {
         ...state,
-        error: '',
+        errors: { ...state.errors, mailVerifyError: '' },
         isLoading: false,
       };
     }
@@ -157,7 +173,7 @@ export const authReducer = createReducer<AuthState>(
     (state, action): AuthState => {
       return {
         ...state,
-        error: action.error,
+        errors: { ...state.errors, mailVerifyError: action.error },
         isLoading: false,
       };
     }
@@ -176,7 +192,7 @@ export const authReducer = createReducer<AuthState>(
     (state, action): AuthState => {
       return {
         ...state,
-        error: '',
+        errors: { ...state.errors, sendEmailToResetPasswordError: '' },
         emailToSendResetPasswordLink: action.email,
         isLoading: false,
       };
@@ -187,7 +203,10 @@ export const authReducer = createReducer<AuthState>(
     (state, action): AuthState => {
       return {
         ...state,
-        error: action.error,
+        errors: {
+          ...state.errors,
+          sendEmailToResetPasswordError: action.error,
+        },
         isLoading: false,
       };
     }
@@ -206,7 +225,7 @@ export const authReducer = createReducer<AuthState>(
     (state): AuthState => {
       return {
         ...state,
-        error: '',
+        errors: { ...state.errors, resetPasswordError: '' },
         userPasswordHasBeenChanged: true,
         isLoading: false,
       };
@@ -217,7 +236,7 @@ export const authReducer = createReducer<AuthState>(
     (state, action): AuthState => {
       return {
         ...state,
-        error: action.error,
+        errors: { ...state.errors, resetPasswordError: action.error },
         isLoading: false,
       };
     }

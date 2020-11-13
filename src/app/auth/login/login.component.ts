@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { State } from './../../state/app.state';
 import { Store } from '@ngrx/store';
 import { AuthPageActions } from '../state/actions';
-import { getError, getLoadingStatus } from './../state/index';
+import { getLoadingStatus, getLoginError } from './../state/index';
 
 @Component({
   selector: 'login',
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder, private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.errorMessage$ = this.store.select(getError);
+    this.errorMessage$ = this.store.select(getLoginError);
 
     this.isLoading$ = this.store.select(getLoadingStatus);
 

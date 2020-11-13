@@ -7,8 +7,8 @@ import { AuthPageActions } from '../state/actions';
 import { State } from './../../state/app.state';
 import {
   getLoadingStatus,
-  getError,
   getEmailToSendResetPasswordLink,
+  getSendEmailToResetPasswordError,
 } from './../state/index';
 
 @Component({
@@ -20,7 +20,7 @@ import {
 export class ForgotPasswordComponent implements OnInit {
   forgotPasswordForm: FormGroup;
 
-  errorMessage$ = this.store.select(getError);
+  errorMessage$ = this.store.select(getSendEmailToResetPasswordError);
   isLoading$ = this.store.select(getLoadingStatus);
 
   emailToSendResetPasswordLink$ = this.store.select(
