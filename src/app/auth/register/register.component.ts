@@ -24,22 +24,17 @@ import { AuthPageActions } from '../state/actions';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   registerForm: FormGroup;
-  errorMessage$: Observable<string>;
-  isLoading$: Observable<boolean>;
+  errorMessage$ = this.store.select(getRegisterUserError);
+  isLoading$ = this.store.select(getLoadingStatus);
 
   private _unsubscribeAll: Subject<any>;
 
-  constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
-    // Set the private defaults
+  constructor(private formBuilder: FormBuilder, private store: Store<State>) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
-    this.errorMessage$ = this.store.select(getRegisterUserError);
-
-    this.isLoading$ = this.store.select(getLoadingStatus);
-
-    this.registerForm = this._formBuilder.group({
+    this.registerForm = this.formBuilder.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],

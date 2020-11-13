@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-/* RxJs */
-import { Observable } from 'rxjs';
 /* NgRx */
 import { State } from './../../state/app.state';
 import { Store } from '@ngrx/store';
@@ -16,17 +14,13 @@ import { getLoadingStatus, getLoginError } from './../state/index';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  errorMessage$: Observable<string>;
-  isLoading$: Observable<boolean>;
+  errorMessage$ = this.store.select(getLoginError);
+  isLoading$ = this.store.select(getLoadingStatus);
 
-  constructor(private _formBuilder: FormBuilder, private store: Store<State>) {}
+  constructor(private formBuilder: FormBuilder, private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.errorMessage$ = this.store.select(getLoginError);
-
-    this.isLoading$ = this.store.select(getLoadingStatus);
-
-    this.loginForm = this._formBuilder.group({
+    this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
     });

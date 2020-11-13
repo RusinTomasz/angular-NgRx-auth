@@ -27,10 +27,10 @@ export class ForgotPasswordComponent implements OnInit {
     getEmailToSendResetPasswordLink
   );
 
-  constructor(private _formBuilder: FormBuilder, private store: Store<State>) {}
+  constructor(private formBuilder: FormBuilder, private store: Store<State>) {}
 
   ngOnInit(): void {
-    this.forgotPasswordForm = this._formBuilder.group({
+    this.forgotPasswordForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
     });
   }

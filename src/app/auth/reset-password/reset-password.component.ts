@@ -37,12 +37,12 @@ export class ResetPasswordComponent implements OnInit, OnDestroy {
   isLoading$ = this.store.select(getLoadingStatus);
   passwordHasBeenChanged$ = this.store.select(getPasswordHasBeenChangedFlag);
 
-  constructor(private _formBuilder: FormBuilder, private store: Store<State>) {
+  constructor(private formBuilder: FormBuilder, private store: Store<State>) {
     this._unsubscribeAll = new Subject();
   }
 
   ngOnInit(): void {
-    this.resetPasswordForm = this._formBuilder.group({
+    this.resetPasswordForm = this.formBuilder.group({
       password: ['', [Validators.required, Validators.minLength(6)]],
       passwordConfirm: ['', [Validators.required, confirmPasswordValidator]],
     });

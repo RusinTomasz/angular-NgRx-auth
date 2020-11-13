@@ -16,10 +16,10 @@ export class MailConfirmComponent {
   registeredUserEmail$ = this.store.select(getRegisteredUserEmail).pipe(
     tap((registeredUserEmail) => {
       if (!registeredUserEmail) {
-        this._router.navigate(['/register']);
+        this.router.navigate(['/register']);
       }
     })
   );
 
-  constructor(private _router: Router, private store: Store<State>) {}
+  constructor(private router: Router, private store: Store<State>) {}
 }
