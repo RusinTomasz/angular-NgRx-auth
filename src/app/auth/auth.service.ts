@@ -1,4 +1,3 @@
-import { User } from './user';
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
@@ -6,14 +5,11 @@ import {
   HttpErrorResponse,
 } from '@angular/common/http';
 
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 /* RxJs */
-import { map, switchMap, tap, catchError, filter } from 'rxjs/operators';
-import { throwError, BehaviorSubject, concat, Subject, of } from 'rxjs';
-/* NgRx */
-import { Store } from '@ngrx/store';
-import { State } from './../state/app.state';
+import { map, switchMap, tap, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 export interface LoginInterface {
   firstName: string;
@@ -39,10 +35,6 @@ export interface ResetPasswordInterface {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  userEmailAddress: string = '';
-  user = new BehaviorSubject<User>(null);
-  isAdmin = false;
-  token: string = '';
   constructor(
     private http: HttpClient,
     private activatedRoute: ActivatedRoute
@@ -50,7 +42,7 @@ export class AuthService {
 
   verifyAccount() {
     return this.activatedRoute.queryParams.pipe(
-      map((params) => (this.token = params['token'])),
+      map((params) => params['token']),
       switchMap((token) =>
         this.http
           .get(`http://localhost:8080/auth/verify-email?token=${token}`)
@@ -60,12 +52,10 @@ export class AuthService {
   }
 
   resetPassword(newPass: ResetPasswordInterface) {
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/hal+json');
-    headers.append('Accept', 'application/json');
+    const headers = this.createHeaders();
 
     return this.activatedRoute.queryParams.pipe(
-      map((params) => (this.token = params['resetPassToken'])),
+      map((params) => params['resetPassToken']),
       switchMap((resetPassToken) =>
         this.http
           .put(
@@ -81,30 +71,13 @@ export class AuthService {
   }
 
   sendEmailToResetPassword(email: ForgotPasswordInterface) {
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/hal+json');
-    headers.append('Accept', 'application/json');
+    const headers = this.createHeaders();
     return this.http
       .put('http://localhost:8080/auth/forgot-password', email, {
         headers: headers,
       })
       .pipe(catchError(this.handleError));
   }
-
-  // resetPassword(resetPassToken: String, newPass: ResetPasswordInterface) {
-  //   let headers = new HttpHeaders();
-  //   headers.append('Content-Type', 'application/hal+json');
-  //   headers.append('Accept', 'application/json');
-  //   return this.http
-  //     .put(
-  //       `http://localhost:8080/auth/reset-password?resetPassToken=${resetPassToken}`,
-  //       newPass,
-  //       {
-  //         headers: headers,
-  //       }
-  //     )
-  //     .pipe(catchError(this.handleError));
-  // }
 
   signUp(
     firstName: string,
@@ -120,10 +93,7 @@ export class AuthService {
       password,
       phoneNumber,
     };
-
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/hal+json');
-    headers.append('Accept', 'application/json');
+    const headers = this.createHeaders();
     return this.http
       .post<RegisterInterface>(
         'http://localhost:8080/auth/signup',
@@ -141,9 +111,7 @@ export class AuthService {
       password,
     };
 
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/hal+json');
-    headers.append('Accept', 'application/json');
+    const headers = this.createHeaders();
 
     return this.http
       .post<LoginInterface>('http://localhost:8080/auth/login', userToLogin, {
@@ -207,5 +175,13 @@ export class AuthService {
     }
 
     return throwError(errorMessage);
+  }
+
+  private createHeaders(): HttpHeaders {
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/hal+json');
+    headers.append('Accept', 'application/json');
+
+    return headers;
   }
 }
