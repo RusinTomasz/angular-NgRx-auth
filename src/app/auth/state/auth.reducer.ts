@@ -18,11 +18,8 @@ export interface AuthState {
     registerUserError?: string | null;
     mailVerifyError?: string | null;
   };
-  // error: string | null;
   isLoading: boolean;
 }
-
-//sendEmailToResetPasswordError / loginError / registerUserError / resetPasswordError / mailVerifyError /
 
 const initialState: AuthState = {
   currentUser: {
