@@ -39,3 +39,10 @@ export const sendEmailToResetPassword = createAction(
   '[Auth Page] Send Email To Reset Password',
   props<{ email: string }>()
 );
+
+/* Reset Password */
+
+export const resetPassword = createAction(
+  '[Auth Page] Reset Password',
+  props<{ newPass: string }>()
+);

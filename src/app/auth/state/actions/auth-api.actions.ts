@@ -48,3 +48,14 @@ export const sendEmailToResetPasswordFailure = createAction(
   '[Auth API] Send Email To Reset Password Failure',
   props<{ error: string }>()
 );
+
+/* Reset Password */
+
+export const resetPasswordSuccess = createAction(
+  '[Auth API] Reset Password Success'
+);
+
+export const resetPasswordFailure = createAction(
+  '[Auth API] Reset Password Failure',
+  props<{ error: string }>()
+);

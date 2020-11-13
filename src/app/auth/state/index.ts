@@ -33,3 +33,8 @@ export const getEmailToSendResetPasswordLink = createSelector(
   getAuthFeatureState,
   (state) => state.emailToSendResetPasswordLink
 );
+
+export const getPasswordHasBeenChangedFlag = createSelector(
+  getAuthFeatureState,
+  (state) => state.userPasswordHasBeenChanged
+);

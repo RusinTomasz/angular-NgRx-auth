@@ -1,3 +1,5 @@
+import { take } from 'rxjs/operators';
+import { resetPasswordFailure } from './actions/auth-api.actions';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 
@@ -46,7 +48,7 @@ export class AuthEffects {
             action.phoneNumber
           )
           .pipe(
-            map((registeredUser: RegisterInterface) =>
+            map(() =>
               AuthApiActions.registerUserSuccess({
                 registeredUserEmail: action.email,
               })
@@ -65,6 +67,7 @@ export class AuthEffects {
       ofType(AuthPageActions.verifyAccount),
       concatMap(() =>
         this.authService.verifyAccount().pipe(
+          take(1),
           map(() => AuthApiActions.verifyAccountSuccess()),
           catchError((error) =>
             of(AuthApiActions.verifyAccountFailure({ error }))
@@ -86,6 +89,21 @@ export class AuthEffects {
           ),
           catchError((error) =>
             of(AuthApiActions.sendEmailToResetPasswordFailure({ error }))
+          )
+        )
+      )
+    );
+  });
+
+  resetPassword$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(AuthPageActions.resetPassword),
+      concatMap((action) =>
+        this.authService.resetPassword({ newPass: action.newPass }).pipe(
+          take(1),
+          map(() => AuthApiActions.resetPasswordSuccess()),
+          catchError((error) =>
+            of(AuthApiActions.resetPasswordFailure({ error }))
           )
         )
       )

@@ -9,7 +9,7 @@ import {
 import { Router, ActivatedRoute } from '@angular/router';
 
 /* RxJs */
-import { map, switchMap, tap, catchError } from 'rxjs/operators';
+import { map, switchMap, tap, catchError, filter } from 'rxjs/operators';
 import { throwError, BehaviorSubject, concat, Subject, of } from 'rxjs';
 /* NgRx */
 import { Store } from '@ngrx/store';
@@ -45,9 +45,7 @@ export class AuthService {
   token: string = '';
   constructor(
     private http: HttpClient,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private store: Store<State>
+    private activatedRoute: ActivatedRoute
   ) {}
 
   verifyAccount() {
@@ -56,6 +54,27 @@ export class AuthService {
       switchMap((token) =>
         this.http
           .get(`http://localhost:8080/auth/verify-email?token=${token}`)
+          .pipe(catchError(this.handleError))
+      )
+    );
+  }
+
+  resetPassword(newPass: ResetPasswordInterface) {
+    let headers = new HttpHeaders();
+    headers.append('Content-Type', 'application/hal+json');
+    headers.append('Accept', 'application/json');
+
+    return this.activatedRoute.queryParams.pipe(
+      map((params) => (this.token = params['resetPassToken'])),
+      switchMap((resetPassToken) =>
+        this.http
+          .put(
+            `http://localhost:8080/auth/reset-password?resetPassToken=${resetPassToken}`,
+            newPass,
+            {
+              headers: headers,
+            }
+          )
           .pipe(catchError(this.handleError))
       )
     );
@@ -72,20 +91,20 @@ export class AuthService {
       .pipe(catchError(this.handleError));
   }
 
-  resetPassword(resetPassToken: String, newPass: ResetPasswordInterface) {
-    let headers = new HttpHeaders();
-    headers.append('Content-Type', 'application/hal+json');
-    headers.append('Accept', 'application/json');
-    return this.http
-      .put(
-        `http://localhost:8080/auth/reset-password?resetPassToken=${resetPassToken}`,
-        newPass,
-        {
-          headers: headers,
-        }
-      )
-      .pipe(catchError(this.handleError));
-  }
+  // resetPassword(resetPassToken: String, newPass: ResetPasswordInterface) {
+  //   let headers = new HttpHeaders();
+  //   headers.append('Content-Type', 'application/hal+json');
+  //   headers.append('Accept', 'application/json');
+  //   return this.http
+  //     .put(
+  //       `http://localhost:8080/auth/reset-password?resetPassToken=${resetPassToken}`,
+  //       newPass,
+  //       {
+  //         headers: headers,
+  //       }
+  //     )
+  //     .pipe(catchError(this.handleError));
+  // }
 
   signUp(
     firstName: string,

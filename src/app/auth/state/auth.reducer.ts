@@ -9,6 +9,7 @@ export interface AuthState {
   currentUser: User;
   registeredUserEmail: string | null;
   emailToSendResetPasswordLink: string | null;
+  userPasswordHasBeenChanged: boolean;
   error: string | null;
   isLoading: boolean;
 }
@@ -24,6 +25,7 @@ const initialState: AuthState = {
   },
   registeredUserEmail: null,
   emailToSendResetPasswordLink: null,
+  userPasswordHasBeenChanged: false,
   error: '',
   isLoading: false,
 };
@@ -182,6 +184,36 @@ export const authReducer = createReducer<AuthState>(
   ),
   on(
     AuthApiActions.sendEmailToResetPasswordFailure,
+    (state, action): AuthState => {
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+      };
+    }
+  ),
+  on(
+    AuthPageActions.resetPassword,
+    (state): AuthState => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+  ),
+  on(
+    AuthApiActions.resetPasswordSuccess,
+    (state): AuthState => {
+      return {
+        ...state,
+        error: '',
+        userPasswordHasBeenChanged: true,
+        isLoading: false,
+      };
+    }
+  ),
+  on(
+    AuthApiActions.resetPasswordFailure,
     (state, action): AuthState => {
       return {
         ...state,
